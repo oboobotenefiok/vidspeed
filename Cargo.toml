@@ -9,19 +9,17 @@ path = "src/main.rs"
 
 [dependencies]
 # CLI
-clap = { version = "4.4", features = ["derive", "color"] }
-indicatif = "0.17"
-colored = "2"
+clap        = { version = "4.4", features = ["derive", "color"] }
+indicatif   = "0.17"
+colored     = "2"
 
 # Async runtime
 tokio = { version = "1", features = ["full"] }
 
-# Processing (no ffmpeg-next, we use system ffmpeg)
-tempfile = "3"
-
 # Utils
-anyhow = "1"
-chrono = { version = "0.4", features = ["serde"] }
-walkdir = "2"
-tracing = "0.1"
-tracing-subscriber = { version = "0.3", features = ["env-filter"] }
+anyhow              = "1"
+chrono              = { version = "0.4", features = ["serde"] }
+walkdir             = "2"
+tracing             = "0.1"
+tracing-subscriber  = { version = "0.3", features = ["env-filter"] }
+dotenv              = "0.15"
