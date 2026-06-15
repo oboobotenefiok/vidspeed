@@ -1,4 +1,4 @@
-VidSpeed
+# VidSpeed
 
 A CLI tool that speeds up videos and strips the audio. That's it.
 
