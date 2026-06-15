@@ -2,13 +2,11 @@
 
 A CLI tool that speeds up videos and strips the audio. That's it.
 
-The annoyance
+### The annoyance
 
-Someone sends you a 45 minute lecture recording. You have 20 minutes before your next meeting. Or you're reviewing your own screen capture and have to watch yourself type something slowly. Or it's security footage that's mostly nothing with a few seconds of something.
+Actually, there's no annoyance, I'm building this tool specifically as a test towards YouTube automation and Footage surveillance.
 
-You could open a video editor, import, find the speed setting, export, wait. Or you just run one command.
-
-What this does
+### What this does
 
 You give it a video file and a speed. It gives you back a new video that plays at that speed with no audio. The original file stays untouched.
 
@@ -16,9 +14,9 @@ You give it a video file and a speed. It gives you back a new video that plays a
 vidspeed lecture.mp4 -s 2.0
 ```
 
-That's it. Output lands in the same folder as lecture_speed2x_noaudio.mp4.
+The output lands in the same folder as lecture_speed2x_noaudio.mp4.
 
-Usage
+### Usage
 
 The basic shape:
 
@@ -33,7 +31,7 @@ vidspeed recording.mp4 -s 1.5   # faster
 vidspeed slowmo.mp4 -s 0.5      # half speed
 ```
 
-Speed must be between 0.1 and 10.0. Below that gets weird. Above that is basically a flipbook.
+Speed must be between 0.1 and 10.0. Below that gets weird. Above that is basically a flipbook, lol 😂.
 
 Pick an output location with -o:
 
@@ -41,11 +39,11 @@ Pick an output location with -o:
 vidspeed video.mkv -s 2.5 -o ~/Desktop/fast.mp4
 ```
 
-Need a reminder? vidspeed --help.
+Need a reminder? run vidspeed --help.
 
-Install
+### Install
 
-You need Rust and FFmpeg first.
+###### You need Rust and FFmpeg first.
 
 Rust: curl --proto '=https' --tlsv1.2 -sSf https://sh.rustup.rs | sh
 
@@ -55,12 +53,12 @@ FFmpeg:
 · Ubuntu/Debian: sudo apt install ffmpeg
 · Windows: grab a binary from ffmpeg.org and add it to your PATH
 
-Verify with ffmpeg -version. If that fails, stop here.
+Verify with ffmpeg -version. If that Fails, STOP HERE!!! Make sure you have ffmpeg before you continue, else nothing will work, trust me bro.
 
 Now get VidSpeed:
 
 ```bash
-git clone https://github.com/yourusername/vidspeed
+git clone https://github.com/oboobotenefiok/vidspeed
 cd vidspeed
 cargo build --release
 ```
@@ -79,13 +77,13 @@ cargo install --path .
 
 Now you can just type vidspeed from anywhere.
 
-What happens when you run it
+### What happens when you run it
 
-The tool checks your speed is valid, makes sure the input file exists, then hands everything to FFmpeg. FFmpeg does the actual video crunching while a little spinner spins so you know it's not frozen. When it's done, you get a success message or an error telling you what broke.
+The tool checks your speed is valid, makes sure the input file exists, then hands everything to FFmpeg. FFmpeg does the actual video crunching while a little gun loader (or how is it called?) shoots so you know it's not frozen. When it's done, you get a success message or an error telling you what broke.
 
-Audio always gets removed. Sped up audio sounds like chipmunks on caffeine and helps no one.
+Audio always gets removed. Sped up audio sounds like chipmunks(not dogs, they'd be dead, maybe) on caffeine and helps no one.
 
-Configuration
+### Configuration
 
 There's a .env file if you want to tweak things. Copy .env.example to .env and edit these:
 
@@ -94,13 +92,13 @@ There's a .env file if you want to tweak things. Copy .env.example to .env and e
 
 You probably don't need to change either.
 
-Formats
+### Formats
 
 Whatever FFmpeg accepts. That's basically everything: .mp4, .mov, .avi, .mkv, .webm, .flv, .wmv, .ts, .3gp.
 
 Output is always .mp4 with H.264 encoding. Plays on anything.
 
-When things go wrong
+### ERROR GUIDE:
 
 "command not found: vidspeed" - You didn't install it. Run it directly with ./target/release/vidspeed or run cargo install --path .
 
@@ -112,7 +110,7 @@ When things go wrong
 
 The output has no audio - That's the point. Read the tool name again.
 
-Project layout
+### Project layout
 
 ```
 vidspeed/
@@ -122,29 +120,37 @@ vidspeed/
     processor.rs - builds and runs the FFmpeg command
   Cargo.toml     - dependencies and project settings
   .env.example   - template for your local config
+
+.../etc...
+
 ```
 
-Dependencies
+### Dependencies
 
-Crate Why
-clap Parses command line arguments so you don't have to
-tokio Async runtime. Handles waiting for FFmpeg without blocking
-indicatif Shows that spinning progress thing so you know it's working
-colored Makes error messages red and success messages green
-anyhow Error handling that doesn't make you write 20 lines of boilerplate
+Crate this side ... Why this side.
+clap ... Parses command line arguments so you don't have to
+tokio Async runtime ... Handles waiting for FFmpeg without blocking
+indicatif ... Shows that shooting progress thing so you know it's working
+colored ... Makes error messages red and success messages green
+anyhow ... Error handling that doesn't make you write 20 lines of boilerplate
 
 A note on performance
 
 FFmpeg encodes with H.264 at medium preset and CRF 23. That's the sensible default balance between speed, file size, and quality. If you want to tweak it, edit processor.rs and change -c:v libx264, -preset medium, or -crf 23.
 
-The future
+### The future
 
 Probably nothing. This does one small thing and does it well. But if someone really wanted to add batch processing or real progress percentages, the codebase is small enough that it wouldn't be hard.
 
-License
+### License
 
 MIT. Do whatever you want.
 
 ---
 
-Go watch something faster.
+
+Feel free to submit issues and pull requests.
+
+With love,
+
+- Obot
