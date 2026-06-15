@@ -1,179 +1,150 @@
-You know those long videos you don't have time to watch? Lecture recordings, security footage, someone's slow-paced tutorial. VidSpeed is for those moments.
+VidSpeed
 
-It's a simple command line tool written in Rust. It speeds up or slows down any video file and removes the audio, because sped up audio just sounds terrible anyway. That's it.
+A CLI tool that speeds up videos and strips the audio. That's it.
 
-The video never leaves your machine. VidSpeed hands it to FFmpeg, which does the real work, and you get a new file ready to watch.
+The annoyance
 
----
+Someone sends you a 45 minute lecture recording. You have 20 minutes before your next meeting. Or you're reviewing your own screen capture and have to watch yourself type something slowly. Or it's security footage that's mostly nothing with a few seconds of something.
 
-Who actually uses this?
+You could open a video editor, import, find the speed setting, export, wait. Or you just run one command.
 
-Students binge watching recorded lectures at double speed. Developers reviewing screen recordings. Anyone comfortable opening a terminal and running a single command.
+What this does
 
----
-
-What you need first
-
-You need two things installed before VidSpeed will work.
-
-1. Rust and Cargo
-
-Go to rustup.rs and follow the install instructions. After it's done, restart your terminal and run:
-
-```bash
-rustc --version
-cargo --version
-```
-
-You want Rust 1.70 or newer. Update with rustup update stable if yours is older.
-
-2. FFmpeg
-
-On macOS with Homebrew:
-
-```bash
-brew install ffmpeg
-```
-
-On Ubuntu or Debian:
-
-```bash
-sudo apt update
-sudo apt install ffmpeg
-```
-
-On Windows, grab a pre built binary from ffmpeg.org and add its bin folder to your system PATH.
-
-Verify it works:
-
-```bash
-ffmpeg -version
-```
-
-If you see "command not found", stop here and fix that first.
-
----
-
-Getting VidSpeed installed
-
-Clone the repo and move into the folder:
-
-```bash
-git clone https://github.com/yourusername/vidspeed.git
-cd vidspeed
-```
-
-Copy the example environment file:
-
-```bash
-cp .env.example .env
-```
-
-Then build it:
-
-```bash
-cargo build --release
-```
-
-Your binary ends up at target/release/vidspeed. To run it from anywhere, install it system wide:
-
-```bash
-cargo install --path .
-```
-
----
-
-How to actually use it
-
-The basic command looks like this:
-
-```bash
-vidspeed myvideo.mp4
-```
-
-That runs your video at 2x speed with no audio. Output is saved in the same folder as myvideo_speed2x_noaudio.mp4.
-
-To pick a different speed:
-
-```bash
-vidspeed myvideo.mp4 -s 1.5
-vidspeed myvideo.mp4 -s 0.5   # slow motion
-```
-
-Speed must be between 0.1 and 10. Anything outside that gets rejected.
-
-To choose where the output goes:
-
-```bash
-vidspeed myvideo.mp4 -s 2.0 -o /path/to/finished.mp4
-```
-
-Need help? Run vidspeed --help.
-
----
-
-What happens when you run it
-
-VidSpeed checks your speed value, makes sure the input file exists, builds an FFmpeg command with a filter that changes the video timing, strips the audio, runs the command with a progress spinner so you know it's working, then tells you if it succeeded or failed.
-
-That's the whole loop.
-
----
-
-Configuration
-
-All settings live in a .env file in the project root. You have two options:
-
-RUST_LOG controls how much detail prints to the terminal. Options are error, warn, info, debug, trace. Default is info.
-
-TEMP_FILE_TTL_HOURS sets how many hours before a file is considered old enough to clean up. Default is 24.
-
----
-
-Formats
-
-VidSpeed accepts whatever FFmpeg accepts. That means basically everything: .mp4, .mov, .avi, .mkv, .webm, .flv, .wmv, .m4v, .ts, .3gp. The output is always a standard .mp4 file using H.264 encoding.
-
----
-
-Common problems
-
-"command not found: vidspeed"
-
-You either haven't built it or haven't installed it. Run it directly with ./target/release/vidspeed myvideo.mp4 or install it with cargo install --path ..
-
-"Failed to execute ffmpeg"
-
-FFmpeg isn't installed or isn't on your PATH. Run ffmpeg -version to check.
-
-"Input file does not exist"
-
-Double check the path. If the filename has spaces, wrap it in quotes. Use an absolute path if you're in a different directory.
-
-"Video processing failed"
-
-This usually means the input file is corrupted, the output folder doesn't exist, or you don't have write permissions. Run with RUST_LOG=debug in your .env file to see more details.
-
-The output has no audio
-
-That's intentional. Audio always gets removed. The tool is called VidSpeed for a reason.
-
----
-
-One last thing
-
-VidSpeed exists because opening a video editor just to change playback speed is too many steps for something you might do ten times a day. Now it's one command.
+You give it a video file and a speed. It gives you back a new video that plays at that speed with no audio. The original file stays untouched.
 
 ```bash
 vidspeed lecture.mp4 -s 2.0
 ```
 
-I had initial intentions to make this work on the web too but the energy isn't really there for now. This actually has solved the problem and I'll only work towards modifying it to suit my current workflow if need be.
+That's it. Output lands in the same folder as lecture_speed2x_noaudio.mp4.
 
-Feel free to submit and issue or Pull Request. I do not guarantee they will be attended to but I'll be looking at them.
+Usage
 
-Thanks for reading this far.
+The basic shape:
 
-With Love,
+```bash
+vidspeed [OPTIONS] <INPUT>
+```
 
-- Obot
+Pick a speed with -s:
+
+```bash
+vidspeed recording.mp4 -s 1.5   # faster
+vidspeed slowmo.mp4 -s 0.5      # half speed
+```
+
+Speed must be between 0.1 and 10.0. Below that gets weird. Above that is basically a flipbook.
+
+Pick an output location with -o:
+
+```bash
+vidspeed video.mkv -s 2.5 -o ~/Desktop/fast.mp4
+```
+
+Need a reminder? vidspeed --help.
+
+Install
+
+You need Rust and FFmpeg first.
+
+Rust: curl --proto '=https' --tlsv1.2 -sSf https://sh.rustup.rs | sh
+
+FFmpeg:
+
+· macOS: brew install ffmpeg
+· Ubuntu/Debian: sudo apt install ffmpeg
+· Windows: grab a binary from ffmpeg.org and add it to your PATH
+
+Verify with ffmpeg -version. If that fails, stop here.
+
+Now get VidSpeed:
+
+```bash
+git clone https://github.com/yourusername/vidspeed
+cd vidspeed
+cargo build --release
+```
+
+Run it directly:
+
+```bash
+./target/release/vidspeed myvideo.mp4
+```
+
+Or install it to your PATH:
+
+```bash
+cargo install --path .
+```
+
+Now you can just type vidspeed from anywhere.
+
+What happens when you run it
+
+The tool checks your speed is valid, makes sure the input file exists, then hands everything to FFmpeg. FFmpeg does the actual video crunching while a little spinner spins so you know it's not frozen. When it's done, you get a success message or an error telling you what broke.
+
+Audio always gets removed. Sped up audio sounds like chipmunks on caffeine and helps no one.
+
+Configuration
+
+There's a .env file if you want to tweak things. Copy .env.example to .env and edit these:
+
+· RUST_LOG - how much detail to print. Options: error, warn, info, debug, trace. Default is info.
+· TEMP_FILE_TTL_HOURS - how many hours before a file is considered old enough to clean up. Default is 24.
+
+You probably don't need to change either.
+
+Formats
+
+Whatever FFmpeg accepts. That's basically everything: .mp4, .mov, .avi, .mkv, .webm, .flv, .wmv, .ts, .3gp.
+
+Output is always .mp4 with H.264 encoding. Plays on anything.
+
+When things go wrong
+
+"command not found: vidspeed" - You didn't install it. Run it directly with ./target/release/vidspeed or run cargo install --path .
+
+"Failed to execute ffmpeg" - FFmpeg isn't installed or not on your PATH. Run ffmpeg -version to check.
+
+"Input file does not exist" - Typo, wrong path, or the filename has spaces. Wrap it in quotes: vidspeed "my video.mp4"
+
+"Video processing failed" - The input file might be corrupted, the output folder might not exist, or you don't have write permissions. Set RUST_LOG=debug in your .env to see FFmpeg's full error message.
+
+The output has no audio - That's the point. Read the tool name again.
+
+Project layout
+
+```
+vidspeed/
+  src/
+    main.rs      - grabs your arguments, validates speed, calls the rest
+    cli.rs       - prints the colored output you see in the terminal
+    processor.rs - builds and runs the FFmpeg command
+  Cargo.toml     - dependencies and project settings
+  .env.example   - template for your local config
+```
+
+Dependencies
+
+Crate Why
+clap Parses command line arguments so you don't have to
+tokio Async runtime. Handles waiting for FFmpeg without blocking
+indicatif Shows that spinning progress thing so you know it's working
+colored Makes error messages red and success messages green
+anyhow Error handling that doesn't make you write 20 lines of boilerplate
+
+A note on performance
+
+FFmpeg encodes with H.264 at medium preset and CRF 23. That's the sensible default balance between speed, file size, and quality. If you want to tweak it, edit processor.rs and change -c:v libx264, -preset medium, or -crf 23.
+
+The future
+
+Probably nothing. This does one small thing and does it well. But if someone really wanted to add batch processing or real progress percentages, the codebase is small enough that it wouldn't be hard.
+
+License
+
+MIT. Do whatever you want.
+
+---
+
+Go watch something faster.
