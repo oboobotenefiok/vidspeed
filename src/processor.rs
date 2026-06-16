@@ -1,5 +1,5 @@
 
-use std::path::{Path, PathBuf};
+use std::path::{/*Path,*/ PathBuf};
 use std::process::Stdio;
 use tokio::process::Command;
 use anyhow::{Context, Result};
@@ -98,7 +98,7 @@ impl VideoProcessor {
         result
     }
 }
-
+/*
 pub async fn cleanup_old_files(directory: &Path, max_age_hours: u64) -> Result<()> {
     let now = chrono::Utc::now();
     let mut removed = 0;
@@ -136,3 +136,4 @@ pub async fn cleanup_old_files(directory: &Path, max_age_hours: u64) -> Result<(
 
     Ok(())
 }
+*/
