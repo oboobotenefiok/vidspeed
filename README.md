@@ -14,7 +14,7 @@ You give it a video file and a speed. It gives you back a new video that plays a
 vidspeed lecture.mp4 -s 2.0
 ```
 
-The output lands in the same folder as lecture_speed2x_noaudio.mp4.
+The output lands in the same folder as `lecture_speed2x_noaudio.mp4.`
 
 ### Usage
 
@@ -45,15 +45,18 @@ Need a reminder? run vidspeed --help.
 
 ###### You need Rust and FFmpeg first.
 
-Rust: curl --proto '=https' --tlsv1.2 -sSf https://sh.rustup.rs | sh
+Rust: 
+```bash
+curl --proto '=https' --tlsv1.2 -sSf https://sh.rustup.rs | sh
+```
 
 FFmpeg:
 
-· macOS: brew install ffmpeg
-· Ubuntu/Debian: sudo apt install ffmpeg
-· Windows: grab a binary from ffmpeg.org and add it to your PATH
+* macOS: `brew install ffmpeg`
+* Ubuntu/Debian: `sudo apt install ffmpeg`
+* Windows: grab a binary from [ffmpeg.org](https://ffmpeg.org) and add it to your PATH
 
-Verify with ffmpeg -version. If that Fails, STOP HERE!!! Make sure you have ffmpeg before you continue, else nothing will work, trust me bro.
+Verify with `ffmpeg -version`. If that Fails, STOP HERE!!! Make sure you have ffmpeg before you continue, else nothing will work, trust me bro.
 
 Now get VidSpeed:
 
@@ -85,10 +88,10 @@ Audio always gets removed. Sped up audio sounds like chipmunks(not dogs, they'd 
 
 ### Configuration
 
-There's a .env file if you want to tweak things. Copy .env.example to .env and edit these:
+There's a `.env` file if you want to tweak things. Copy `.env.example` to `.env` and edit these:
 
-· RUST_LOG - how much detail to print. Options: error, warn, info, debug, trace. Default is info.
-· TEMP_FILE_TTL_HOURS - how many hours before a file is considered old enough to clean up. Default is 24.
+* **RUST_LOG** - how much detail to print. Options: error, warn, info, debug, trace. Default is info.
+* **TEMP_FILE_TTL_HOURS** - how many hours before a file is considered old enough to clean up. Default is 24.
 
 You probably don't need to change either.
 
@@ -100,19 +103,19 @@ Output is always .mp4 with H.264 encoding. Plays on anything.
 
 ### ERROR GUIDE:
 
-"command not found: vidspeed" - You didn't install it. Run it directly with ./target/release/vidspeed or run cargo install --path .
+**"command not found: vidspeed"** - You didn't install it. Run it directly with `./target/release/vidspeed` or run cargo install --path .
 
-"Failed to execute ffmpeg" - FFmpeg isn't installed or not on your PATH. Run ffmpeg -version to check.
+**"Failed to execute ffmpeg"** - FFmpeg isn't installed or not on your PATH. Run ffmpeg -version to check.
 
-"Input file does not exist" - Typo, wrong path, or the filename has spaces. Wrap it in quotes: vidspeed "my video.mp4"
+**"Input file does not exist"** - Typo, wrong path, or the filename has spaces. Wrap it in quotes: vidspeed "my video.mp4"
 
-"Video processing failed" - The input file might be corrupted, the output folder might not exist, or you don't have write permissions. Set RUST_LOG=debug in your .env to see FFmpeg's full error message.
+**"Video processing failed"** - The input file might be corrupted, the output folder might not exist, or you don't have write permissions. Set RUST_LOG=debug in your .env to see FFmpeg's full error message.
 
 The output has no audio - That's the point. Read the tool name again.
 
 ### Project layout
 
-```
+```text
 vidspeed/
   src/
     main.rs      - grabs your arguments, validates speed, calls the rest
@@ -128,10 +131,15 @@ vidspeed/
 ### Dependencies
 
 Crate this side ... Why this side.
+
 clap ... Parses command line arguments so you don't have to
+
 tokio Async runtime ... Handles waiting for FFmpeg without blocking
+
 indicatif ... Shows that shooting progress thing so you know it's working
+
 colored ... Makes error messages red and success messages green
+
 anyhow ... Error handling that doesn't make you write 20 lines of boilerplate
 
 A note on performance
